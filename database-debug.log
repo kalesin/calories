@@ -1,0 +1,9 @@
+12:02:23.415 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started
+12:02:23.593 [main] INFO com.firebase.server.forge.App$ - Listening at localhost:9000
+12:04:26.376 [Thread-1] INFO com.firebase.server.forge.App$ - Attempting graceful shutdown.
+12:04:26.384 [NamespaceSystem-akka.actor.default-dispatcher-7] INFO com.firebase.core.namespace.Terminator$Terminator - 2 actors left to terminate: fake-server, vuejs-stock-trader-f7694
+12:04:26.393 [NamespaceSystem-akka.actor.default-dispatcher-10] INFO com.firebase.core.namespace.NamespaceActor - Stopping namespace actor for fake-server
+12:04:26.393 [NamespaceSystem-akka.actor.default-dispatcher-9] INFO com.firebase.core.namespace.NamespaceActor - Stopping namespace actor for vuejs-stock-trader-f7694
+12:04:26.395 [NamespaceSystem-akka.actor.default-dispatcher-10] INFO com.firebase.core.namespace.NamespaceActor - Gauges removed for fake-server
+12:04:26.395 [NamespaceSystem-akka.actor.default-dispatcher-9] INFO com.firebase.core.namespace.NamespaceActor - Gauges removed for vuejs-stock-trader-f7694
+12:04:26.402 [Thread-1] INFO com.firebase.server.forge.App$ - Graceful shutdown complete.
