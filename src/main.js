@@ -14,7 +14,7 @@ Vue.use(VueRouter);
 Vue.use(VueResource);
 Vue.use(Vuetify);
 
-Vue.http.options.root = 'https://vuejs-stock-trader-f7694.firebaseio.com/';
+Vue.http.options.root = 'https://caloriecounter-309316-default-rtdb.firebaseio.com/';
 
 Vue.filter('currency', (value) => {
   return '$' + value.toLocaleString();
@@ -29,14 +29,14 @@ new Vue({
   router,
   created() {
     var config = {
-      apiKey: "AIzaSyBWmS0w_Ex_mNBKzyvsNHVLqju97_q30ns",
-      authDomain: "vuejs-stock-trader-f7694.firebaseapp.com",
-      databaseURL: "https://vuejs-stock-trader-f7694.firebaseio.com",
-      projectId: "vuejs-stock-trader-f7694",
-      storageBucket: "vuejs-stock-trader-f7694.appspot.com",
-      messagingSenderId: "738625718881",
-      appId: "1:738625718881:web:3b444ca61121336de7b820",
-      measurementId: "G-JQ12LXEBCS"
+      apiKey: "AIzaSyD07CNC69O6OSJnLKLVImFabSmQ751uQsA",
+      authDomain: "caloriecounter-309316.firebaseapp.com",
+      databaseURL: "https://caloriecounter-309316-default-rtdb.firebaseio.com",
+      projectId: "caloriecounter-309316",
+      storageBucket: "caloriecounter-309316.appspot.com",
+      messagingSenderId: "586033597299",
+      appId: "1:586033597299:web:3d01bbc528cfe54f319306",
+      measurementId: "G-486MLZ10L8"
     };
     firebase.initializeApp(config);
     firebase.auth().onAuthStateChanged(user => {

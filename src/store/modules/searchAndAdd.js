@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 const searchAndAdd = {
     namespaced: true,
     state: () => ({
-        axios_url: "https://vuejs-stock-trader-f7694.firebaseio.com/data/",
+        axios_url: "https://caloriecounter-309316-default-rtdb.firebaseio.com//data/",
         api_key: "4d036c5868dfd862b3d383c4e2d872fc",
         api_id: "8f153d95",
         api_url: "https://api.edamam.com/api/food-database/v2/parser?",

@@ -4,6 +4,7 @@
   },
   "hosting": {
     "public": "dist",
+    "site":"caloriescounter",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -15,5 +16,8 @@
         "destination": "/index.html"
       }
     ]
+  },
+  "storage": {
+    "rules": "storage.rules"
   }
 }

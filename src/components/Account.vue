@@ -198,7 +198,7 @@
           </v-card-text>
           <br />
           <v-card-text class="text-subtitle-1 text-left">
-            Thank you for using Calorie Counter!
+            Thank you for using Calorie Counter! fffffffffffffff
           </v-card-text>
         </v-card>
       </div>
