@@ -1,6 +1,7 @@
 
 # Calories Counter App
 Welcome to Calorie Counter! 
+
 This app is for
 reaching your body weight goals! The first step when logging your
 calorie intake should be determining your target body weight and the
