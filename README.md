@@ -2,11 +2,11 @@
 # Calories Counter App
 
 ## The App
-It is written in the JS framework VUEJS and uses the material design framework [Vuetify](https://vuetifyjs.com/en/) for a clean app look. It uses [Firebase](https://firebase.google.com/) on the backend and it's included features for: OAuth login flow, the apps database, managing users and hosting the site. For retrieving food nutritional data the app uses the [Edamam Food Database API](https://developer.edamam.com/).
+The app is written in the JS framework VUEJS and uses the material design framework [Vuetify](https://vuetifyjs.com/en/) for a clean app look. It uses [Firebase](https://firebase.google.com/) on the backend and it's included features for: OAuth login flow, the apps database, managing users and hosting the site. For retrieving food nutritional data the app uses the [Edamam Food Database API](https://developer.edamam.com/).
 
 The app is live at https://caloriescounter.web.app/.
 
- ## Welcome to Calorie Counter!
+ ## Welcome to Calorie Counter
 
 This app is for
 reaching your body weight goals. The first step when logging your
@@ -26,8 +26,7 @@ different meals: Breakfast, Lunch, Dinner and Snacks. You can drag
 foods between meals and make your own recipes. After you have
 created a recipe you can add it to your meals or favorite it.
 
-![Entries Page](https://user-images.githubusercontent.com/59158929/116547803-a4c7aa00-a8f3-11eb-9e33-27ea0c4fad38.png)
-
+![Entries Page](https://user-images.githubusercontent.com/59158929/116582884-13b5fa80-a916-11eb-8a93-a4fb6e7424a5.png)
 
 Adding recipes is meant to be used for [meal prepping food](https://sweetpeasandsaffron.com/how-to-meal-prep/)
 or cooking larger meals multiple times a day which are split into
