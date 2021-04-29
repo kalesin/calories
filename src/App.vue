@@ -36,7 +36,6 @@ export default {
   },
   created() {
     var user = firebase.auth().currentUser;
-    console.log(user);
     if (user) {
       this.user = user;
     }

@@ -41,9 +41,23 @@ new Vue({
     firebase.initializeApp(config);
     firebase.auth().onAuthStateChanged(user => {
       if (user && user.uid) {
+        var newUser = user.metadata.creationTime === user.metadata.lastSignInTime ? true : false;
+        console.log(user)
+        console.log(newUser)
         this.$store.dispatch("firebase/setUser", user)
         this.$store.dispatch("firebase/getData").then(() => {
           this.$store.dispatch("firebase/setData", true)
+          if (newUser) {
+            this.$store.dispatch("firebase/setNewUser", newUser)
+            if (this.$router.currentRoute.path !== '/me') {
+              this.$router.push('/me')
+            }
+          } else {
+            if (this.$router.currentRoute.path == '/' || this.$router.currentRoute.path == '') {
+              this.$router.push('/calories')
+            }
+          }
+
         }
         ).catch(function (error) {
           console.log(error);

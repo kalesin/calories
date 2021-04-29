@@ -151,9 +151,9 @@
       <v-btn color="success" @click="setOpenTutorial()">TUTORIAL</v-btn>
       <div v-if="openTutorial" class="d-flex mt-8">
         <v-card tile flat>
-          <v-card-text class="text-h4 text-left"> Calorie Counter </v-card-text>
+          <v-card-text class="text-h4 text-left"> Welcome to Calorie Counter!</v-card-text>
           <v-card-text class="text-subtitle-1 text-left">
-            Welcome to Calorie Counter, this app is intented to be used for
+            This app is for
             reaching your body weight goals! The first step when logging your
             calorie intake should be determining your target body weight and the
             amount of calories you should be eating in day to reach that goal.
@@ -198,7 +198,7 @@
           </v-card-text>
           <br />
           <v-card-text class="text-subtitle-1 text-left">
-            Thank you for using Calorie Counter! fffffffffffffff
+            Thank you for using Calorie Counter!
           </v-card-text>
         </v-card>
       </div>
@@ -214,6 +214,9 @@ export default {
   mounted() {
     this.provider = firebase.auth().currentUser.providerData[0].providerId;
     this.email = firebase.auth().currentUser.email;
+    if (this.newUser) {
+      this.setOpenTutorial();
+    }
   },
 
   watch: {
@@ -270,7 +273,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("firebase", ["loggedIn", "userData", "userID"]),
+    ...mapState("firebase", ["loggedIn", "userData", "userID","newUser"]),
     ...mapState("searchAndAdd", ["maintenanceCalories"]),
   },
   methods: {

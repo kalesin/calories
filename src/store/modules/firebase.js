@@ -9,6 +9,7 @@ const firebase = {
         email: "",
         userID: "",
         user: {},
+        newUser: false,
         setData: false,
         setAuth: false
     }),
@@ -34,6 +35,9 @@ const firebase = {
         },
         SET_AUTH(state, value) {
             state.setAuth = value
+        },
+        SET_NEW_USER(state, value) {
+            state.newUser = value
         }
     },
     actions: {
@@ -78,6 +82,9 @@ const firebase = {
         },
         setAuth({ commit }, value) {
             commit("SET_AUTH", value)
+        },
+        setNewUser({ commit }, value) {
+            commit("SET_NEW_USER", value)
         },
         setUserID({ commit }, value) {
             commit("SET_USER_ID", value)

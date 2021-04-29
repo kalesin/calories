@@ -13,6 +13,7 @@ const searchAndAdd = {
         queryRecipe: "",
         responseData: 0,
         quantity: "",
+        foodLabel: "",
         nutrients: 0,
         nutrientsArray: [],
         addedItems: [],
@@ -51,14 +52,14 @@ const searchAndAdd = {
     }),
     mutations: {
         SET_SEARCH_RESPONSE(state, payload) {
-            state.responseData = payload.data.parsed[0].food;
+            state.foodLabel = payload.label;
             state.nutrients = {
-                NAME: state.responseData.label,
-                ENERGY: state.responseData.nutrients.ENERC_KCAL || 0,
-                CARB: state.responseData.nutrients.CHOCDF || 0,
-                FAT: state.responseData.nutrients.FAT || 0,
-                FIBER: state.responseData.nutrients.FIBTG || 0,
-                PROTEIN: state.responseData.nutrients.PROCNT || 0
+                NAME: payload.label,
+                ENERGY: payload.nutrients.ENERC_KCAL || 0,
+                CARB: payload.nutrients.CHOCDF || 0,
+                FAT: payload.nutrients.FAT || 0,
+                FIBER: payload.nutrients.FIBTG || 0,
+                PROTEIN: payload.nutrients.PROCNT || 0
             };
             state.nutrientsArray = [
                 state.nutrients.ENERGY,
@@ -298,8 +299,17 @@ const searchAndAdd = {
                 )
                 .then(
                     response => {
+                        console.log(response.data.hints)
                         let responseIndex = response.data.hints.findIndex(e => e.food.label.toLowerCase() === query)
-                        commit("SET_SEARCH_RESPONSE", response)
+                        console.log(responseIndex)
+                        let responseResult = null;
+                        if (responseIndex == -1) {
+                            responseResult = response.data.hints[0].food
+                        } else {
+                            responseResult = response.data.hints[responseIndex].food
+                        }
+                        console.log(responseResult)
+                        commit("SET_SEARCH_RESPONSE", responseResult)
                         let index = -1;
                         let items = !searchRecipe ? state.items[state.itemsPropNames[state.itemsIndex]] : state.addedItemsRecipe
                         if (items) {
