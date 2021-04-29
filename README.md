@@ -7,8 +7,7 @@ calorie intake should be determining your target body weight and the
  amount of calories you should be eating in day to reach that goal.
 Using this online tool will help you determine the amount of
 calories you should aim for:
-https://www.calculator.net/calorie-calculator.html
-Calorie Calculator, of course everybody is different so you will need to monitor your
+[Calorie Calculator](https://www.calculator.net/calorie-calculator.html), of course everybody is different so you will need to monitor your
 intake and body weight while you diet and make changes accordingly!
    
 ##  Entries
@@ -23,8 +22,7 @@ easily!
 ![Entries Page](https://user-images.githubusercontent.com/59158929/116547803-a4c7aa00-a8f3-11eb-9e33-27ea0c4fad38.png)
 
 
-Adding recipes is meant to be used for
-https://sweetpeasandsaffron.com/how-to-meal-prep/meal prepping food
+Adding recipes is meant to be used for [meal prepping food](https://sweetpeasandsaffron.com/how-to-meal-prep/)
 or cooking larger meals multiple times a day which are split into
 portions. For example making a meal with 1kg of chicken breast,
 vegetables, 500 g of rice, olive oil, etc. and splitting it into 4
