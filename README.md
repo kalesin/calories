@@ -2,7 +2,7 @@
 # Calories Counter App
 
 ## The App
-The app is written in the JS framework VUEJS and uses the material design framework [Vuetify](https://vuetifyjs.com/en/) for a clean app look. It uses [Firebase](https://firebase.google.com/) on the backend and it's included features for: OAuth login flow, the apps database, managing users and hosting the site. For retrieving food nutritional data the app uses the [Edamam Food Database API](https://developer.edamam.com/).
+The app is written in the JS framework VUE.JS and uses the material design framework [Vuetify](https://vuetifyjs.com/en/) for a clean app look. It uses [Firebase](https://firebase.google.com/) on the backend and it's included features for: OAuth login flow, the apps database, managing users and hosting the site. For retrieving food nutritional data the app uses the [Edamam Food Database API](https://developer.edamam.com/).
 
 The app is live at https://caloriescounter.web.app/.
 
@@ -66,6 +66,3 @@ npm run build
 ```
 npm run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
