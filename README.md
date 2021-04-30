@@ -35,6 +35,8 @@ created a recipe you can add it to your meals or favorite it.
 4. You can reset a whole date's entry\
 ![resetbutton](https://user-images.githubusercontent.com/59158929/116669582-101a8600-a99f-11eb-8276-c3604279d6d5.png)
 
+## Recipes
+
 Adding recipes is meant to be used for [meal prepping food](https://sweetpeasandsaffron.com/how-to-meal-prep/)
 or cooking larger meals multiple times a day which are split into
 portions. For example making a meal with 1kg of chicken breast,
