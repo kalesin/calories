@@ -53,9 +53,9 @@
               <div style="amountBox">
                 <v-card-text v-if="activeIndex != index" class="textAmountBox">
                   <div v-if="item.IS_PORTION === false">
-                    x {{ item.QUANTITY }}g
+                    {{ item.QUANTITY }}g
                   </div>
-                  <div v-else>x {{ item.QUANTITY / 100 }} por.</div>
+                  <div v-else>{{ item.QUANTITY / 100 }} por.</div>
                 </v-card-text>
                 <div v-else class="d-flex justify-space-around inputBox">
                   <v-btn
