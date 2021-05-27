@@ -39,11 +39,11 @@ new Vue({
       measurementId: "G-486MLZ10L8"
     };
     firebase.initializeApp(config);
+    
     firebase.auth().onAuthStateChanged(user => {
+      console.log(firebase.auth() != null);
       if (user && user.uid) {
         var newUser = user.metadata.creationTime === user.metadata.lastSignInTime ? true : false;
-        console.log(user)
-        console.log(newUser)
         this.$store.dispatch("firebase/setUser", user)
         this.$store.dispatch("firebase/getData").then(() => {
           this.$store.dispatch("firebase/setData", true)

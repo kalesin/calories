@@ -5,6 +5,9 @@
       'calendar-day--not-current': !day.isCurrentMonth,
       'calendar-day--today': isToday,
       'calendar-day--current': isCurrent,
+      'calendar-day--28': days.length <=28,
+      'calendar-day--35': days.length <= 35 && days.length > 28,
+      'calendar-day--42': days.length >35
     }"
     @click="selectDate(day)"
   >
@@ -81,6 +84,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    days: {
+      type: Array,
+      default: null
+    }
   },
   computed: {
     ...mapState("searchAndAdd", ["dailyEntries", "maintenanceCalories"]),
@@ -149,9 +156,6 @@ export default {
   }
 }
 @media only screen and (max-width: 500px) {
-  .calendar-day {
-    height: 60px !important;
-  }
   .progress {
     font-size: 0.8rem;
   }
@@ -194,11 +198,19 @@ span {
 .calendar-day {
   display: flex;
   position: relative;
-  height: calc((100vh - 100px - 2 * 12px - 5px) / 5);
   font-size: 16px;
   background-color: #fff;
   color: var(--grey-800);
   padding: 0 0;
+}
+.calendar-day--28{
+  height: calc((100vh - 100px - 2 * 12px - 4px) / 4);
+}
+.calendar-day--35{
+  height: calc((100vh - 100px - 2 * 12px - 5px) / 5);
+}
+.calendar-day--42{
+  height: calc((100vh - 100px - 2 * 12px - 6px) / 6);
 }
 
 .calendar-day > span {

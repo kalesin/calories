@@ -309,12 +309,13 @@ const searchAndAdd = {
                             responseResult = response.data.hints[responseIndex].food
                         }
                         console.log(responseResult)
+
                         commit("SET_SEARCH_RESPONSE", responseResult)
                         let index = -1;
                         let items = !searchRecipe ? state.items[state.itemsPropNames[state.itemsIndex]] : state.addedItemsRecipe
                         if (items) {
                             for (let i = 0; i < items.length; i++) {
-                                if (items[i].NAME === state.responseData.label) {
+                                if (items[i].NAME === responseResult.label) {
                                     index = i;
                                 }
                             }

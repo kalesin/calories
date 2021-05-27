@@ -13,6 +13,7 @@
 
       <ol class="days-grid">
         <CalendarMonthDayItem
+        :days="days"
           v-for="day in compareCalendarToEntries"
           :key="day.date"
           :day="day"
@@ -204,11 +205,6 @@ export default {
 </script>
 
 <style scoped>
-@media only screen and (max-width: 500px) {
-  .days-grid {
-    height: 305px !important;
-  }
-}
 .calendar-month {
   position: relative;
   background-color: var(--grey-200);
