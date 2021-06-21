@@ -124,7 +124,7 @@ export default {
       "setAddedItems",
       "setItems",
       "setRecipeDrag",
-      "addDailyEntry"
+      "addDailyEntry",
     ]),
   },
 };
@@ -132,7 +132,7 @@ export default {
 
 <style scoped>
 .search {
-  height: 64px; 
+  height: 64px;
   width: 80%;
   margin-top: 12px;
 }
@@ -167,7 +167,7 @@ export default {
     height: 190px;
   }
   .addedFoods {
-    height: calc(100vh - 190px - 50px - 3*12px) !important;
+    height: calc(100vh - 190px - 50px - 3 * 12px) !important;
   }
   .display {
     width: 100% !important;
@@ -178,9 +178,9 @@ export default {
     width: 100% !important;
   }
   .search {
-  height: 50px; 
-  width: 80%;
-  margin-top: 0px;
-}
+    height: 50px;
+    width: 80%;
+    margin-top: 0px;
+  }
 }
 </style>

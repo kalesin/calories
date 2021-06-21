@@ -5,10 +5,10 @@
       <div v-else class="auth d-flex">
         <router-view
           class="router pa-3"
-          :class="{ noNavBar: hide, fullscreen: setAuth}"
+          :class="{ noNavBar: hide, fullscreen: setAuth }"
         ></router-view>
         <app-header
-        v-if="userID"
+          v-if="userID"
           class="header"
           @hide="setHide"
           :class="{ hide: hide }"
@@ -27,12 +27,7 @@ import { mapActions, mapGetters, mapState } from "vuex";
 export default {
   name: "app",
   computed: {
-    ...mapState("firebase", [
-      "password",
-      "email",
-      "loggedIn",
-      "userData",
-    ]),
+    ...mapState("firebase", ["password", "email", "loggedIn", "userData"]),
   },
   created() {
     var user = firebase.auth().currentUser;
@@ -89,7 +84,18 @@ export default {
 };
 </script>
 
+<style>
+html {
+  height: 100vh;
+}
+body {
+  height: 100%
+  }
+</style>
+
 <style scoped>
+
+
 .v-application--wrap.v-application--wrap {
   flex-direction: row;
 }
@@ -132,8 +138,8 @@ export default {
   animation-duration: 0.5s;
 }
 .fullscreen {
-    width: 100vw !important;
-  }
+  width: 100vw !important;
+}
 
 .router {
   width: calc(100% - 250px);
