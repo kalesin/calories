@@ -50,9 +50,13 @@ const firebase = {
                         let recipes = data.recipes ? data.recipes : [];
                         let maintenanceCalories = data.maintenanceCalories ? data.maintenanceCalories : 2000;
                         let dailyEntries = data.dailyEntries ? data.dailyEntries : [];
+                        let favoriteSearchResults = data.favoriteSearchResults ? data.favoriteSearchResults : [];
+                        let recentSearchResults = data.recentSearchResults ? data.recentSearchResults : [];
                         commit('searchAndAdd/SET_RECIPES', recipes, { root: true })
                         commit('searchAndAdd/SET_MAINTENANCE_CALORIES', maintenanceCalories, { root: true })
                         commit('searchAndAdd/SET_DAILY_ENTRIES', dailyEntries, { root: true })
+                        commit('searchAndAdd/SET_FAVORITE_SEARCH_RESULTS', favoriteSearchResults, { root: true })
+                        commit('searchAndAdd/SET_RECENT_SEARCH_RESULTS', recentSearchResults, { root: true })
                     } else {
                         commit('searchAndAdd/SET_MAINTENANCE_CALORIES', 2000, { root: true })
                     }

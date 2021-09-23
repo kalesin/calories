@@ -23,7 +23,7 @@
         >
           <div class="d-flex">
             <div
-              class="d-flex justify-center align-center textBox"
+              class="d-flex justify-center align-center textBox pl-2"
               :class="{ navbarActive: navbarActive }"
             >
               <v-card-text

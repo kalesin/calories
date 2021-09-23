@@ -1,21 +1,22 @@
 
 import axios from 'axios';
 import dayjs from "dayjs";
+import _ from 'underscore';
 
 const searchAndAdd = {
     namespaced: true,
     state: () => ({
-        axios_url: "https://caloriecounter-309316-default-rtdb.firebaseio.com//data/",
+        firebase_url: "https://caloriecounter-309316-default-rtdb.firebaseio.com//data/",
         api_key: "4d036c5868dfd862b3d383c4e2d872fc",
         api_id: "8f153d95",
         api_url: "https://api.edamam.com/api/food-database/v2/parser?",
+        heroku_url: "https://ancient-river-13326.herokuapp.com/food/?name=",
         query: "",
         queryRecipe: "",
-        responseData: 0,
+        response: false,
+        responseData: [],
+        selectedResponse: { name: "", nutrientArray: [] },
         quantity: "",
-        foodLabel: "",
-        nutrients: 0,
-        nutrientsArray: [],
         addedItems: [],
         items: {
             breakfast: [],
@@ -48,33 +49,23 @@ const searchAndAdd = {
         //other
         navbarActive: true,
         currentDate: null,
-        userID: null
+        userID: null,
+        favoriteSearchResults: [],
+        recentSearchResults: [],
+        recentSearchResultsID: [],
+        resultsArray: [],
     }),
     mutations: {
-        SET_SEARCH_RESPONSE(state, payload) {
-            state.foodLabel = payload.label;
-            state.nutrients = {
-                NAME: payload.label,
-                ENERGY: payload.nutrients.ENERC_KCAL || 0,
-                CARB: payload.nutrients.CHOCDF || 0,
-                FAT: payload.nutrients.FAT || 0,
-                FIBER: payload.nutrients.FIBTG || 0,
-                PROTEIN: payload.nutrients.PROCNT || 0
-            };
-            state.nutrientsArray = [
-                state.nutrients.ENERGY,
-                state.nutrients.PROTEIN,
-                state.nutrients.CARB,
-                state.nutrients.FAT,
-                state.nutrients.FIBER
-            ];
+        SELECT_ITEM(state, payload) {
+            state.selectedResponse.name = payload.name;
+            state.selectedResponse.nutrientArray = payload.nutrientArray;
         },
         CREATE_ITEM_TO_ADD(state, value) {
             state.itemToAdd = {
-                NAME: state.nutrients.NAME,
-                NUTRIENTS: state.nutrientsArray,
+                NAME: state.selectedResponse.name,
+                NUTRIENTS: state.selectedResponse.nutrientArray,
                 QUANTITY: 100,
-                CALCULATED_NUTRIENTS: state.nutrientsArray.map(
+                CALCULATED_NUTRIENTS: state.selectedResponse.nutrientArray.map(
                     x => Math.round(x * 100) / 100
                 ),
                 IS_PORTION: value,
@@ -272,11 +263,11 @@ const searchAndAdd = {
         },
         SET_FAVORITE(state, index) {
             state.recipes[index].IS_FAVORITE = !state.recipes[index].IS_FAVORITE;
-            let array = JSON.parse(JSON.stringify(state.recipes));
-            let array1 = array.filter(element => element.IS_FAVORITE == true)
-            let array2 = array.filter(element => element.IS_FAVORITE == false)
-            array = array1.concat(array2);
-            state.recipes = JSON.parse(JSON.stringify(array))
+            let arrayFavorite = JSON.parse(JSON.stringify(state.recipes));
+            let array1 = arrayFavorite.filter(element => element.IS_FAVORITE == true)
+            let array2 = arrayFavorite.filter(element => element.IS_FAVORITE == false)
+            arrayFavorite = array1.concat(array2);
+            state.recipes = JSON.parse(JSON.stringify(arrayFavorite))
         },
         SET_NAVBARACTIVE(state, value) {
             state.navbarActive = value;
@@ -289,53 +280,162 @@ const searchAndAdd = {
         },
         SET_RECIPE_DRAG(state, value) {
             state.recipeDrag = value;
-        }
+        },
+        SET_RESPONSE(state, value) {
+            state.response = value;
+        },
+        SET_RESPONSE_DATA(state, value) {
+            state.responseData = value;
+        },
+        FAVORITE_SEARCH_RESULTS(state, value) {
+            let index = state.favoriteSearchResults.findIndex((el) => el == value);
+            if (index == -1) {
+                state.favoriteSearchResults.push(value)
+            } else {
+                state.favoriteSearchResults.splice(index, 1)
+            }
+        },
+        SET_FAVORITE_SEARCH_RESULTS(state, value) {
+            state.favoriteSearchResults = value;
+        },
+        RECENT_SEARCH_RESULTS(state, value) {
+            state.resultsArray = []
+            //if its not a favorite item add to recent array
+            if (!state.favoriteSearchResults.includes(value)) {
+                for (let i = 0; i < state.recentSearchResults.length; i++) {
+                    state.resultsArray.push(state.recentSearchResults[i].id)
+                }
+                let index = state.resultsArray.indexOf(value);
+                if (state.resultsArray.length == 0) {
+                    state.recentSearchResults.push({ id: value, time: dayjs() })
+                }
+                else if (state.resultsArray.length < 100) {
+                    if (index != -1) {
+                        console.log('change time')
+                        console.log('index', index)
+                        console.log('time before', dayjs(state.recentSearchResults[index].time))
+                        state.recentSearchResults[index].time = dayjs();
+                        console.log('time after', dayjs(state.recentSearchResults[index].time))
+                    } else {
+                        state.recentSearchResults.push({ id: value, time: dayjs() })
+                    }
+                } else if (state.resultsArray.length == 100) {
+                    if (index != -1) {
+                        console.log('change time')
+                        state.recentSearchResults[index].time = dayjs();
+                    } else {
+                        state.recentSearchResults.splice(0, 1)
+                        state.recentSearchResults.push({ id: value, time: dayjs() })
+                    }
+                }
+            }
+        },
+        SET_RECENT_SEARCH_RESULTS(state, value) {
+            state.recentSearchResults = value;
+        },
     },
     actions: {
-        async searchFood({ state, getters, commit }, { query, searchRecipe }) {
+        async searchFood({ state, commit }, { query }) {
             return axios
                 .get(
-                    `${state.api_url}ingr=${query}&app_id=${state.api_id}&app_key=${state.api_key}`
+                    `${state.heroku_url}${query}`
                 )
                 .then(
                     response => {
-                        console.log(response.data.hints)
-                        let responseIndex = response.data.hints.findIndex(e => e.food.label.toLowerCase() === query)
-                        console.log(responseIndex)
-                        let responseResult = null;
-                        if (responseIndex == -1) {
-                            responseResult = response.data.hints[0].food
-                        } else {
-                            responseResult = response.data.hints[responseIndex].food
+                        commit("SET_RESPONSE", false);
+                        //preoblikovanje podatkov v arrayFavorite
+                        let i = 0;
+                        while (response.data[i]) {
+                            state.responseData[i] = { name: null, id: null, nutrientArray: [] }
+                            state.responseData[i].name = response.data[i].name;
+                            state.responseData[i].id = response.data[i].id;
+                            state.responseData[i].nutrientArray = [
+                                response.data[i].energy,
+                                parseFloat(response.data[i].protein),
+                                parseFloat(response.data[i].carbohydrates),
+                                parseFloat(response.data[i].fat),
+                                parseFloat(response.data[i].fiber),
+                            ]
+                            /* state.responseData[i].favorite = false;
+                            state.responseData[i].lastAdded = null; */
+                            i++;
                         }
-                        console.log(responseResult)
-
-                        commit("SET_SEARCH_RESPONSE", responseResult)
-                        let index = -1;
-                        let items = !searchRecipe ? state.items[state.itemsPropNames[state.itemsIndex]] : state.addedItemsRecipe
-                        if (items) {
-                            for (let i = 0; i < items.length; i++) {
-                                if (items[i].NAME === responseResult.label) {
-                                    index = i;
+                        //sortiranje po favoritih
+                        let array = [];
+                        let array1 = [];
+                        let array2 = [];
+                        let arrayRecent = [];
+                        for (let i = 0; i < state.responseData.length; i++) {
+                            array.push(state.responseData[i].id)
+                        } for (let i = 0; i < state.recentSearchResults.length; i++) {
+                            arrayRecent.push(state.recentSearchResults[i].id)
+                        }
+                        let commonFavorite = _.intersection(array, state.favoriteSearchResults)
+                        let commonRecent = _.intersection(array, arrayRecent)
+                        let commonBoth = _.intersection(commonFavorite, commonRecent)
+                        for (let i = 0; i < commonBoth.length; i++) {
+                            let index = commonRecent.indexOf(commonBoth[i])
+                            if (index != -1) {
+                                commonRecent.splice(index, 1)
+                            }
+                        }
+                        for (let i = 0; i < state.responseData.length; i++) {
+                            for (let j = 0; j < commonFavorite.length; j++) {
+                                if (state.responseData[i].id == commonFavorite[j]) {
+                                    array1.push(state.responseData[i])
+                                    state.responseData.splice(i, 1)
                                 }
                             }
                         }
-                        if (index != -1) {
-                            commit("SET_ACTIVE_INDEX", index)
-                        } else {
-                            commit("CREATE_ITEM_TO_ADD", false)
-                            if (!searchRecipe) {
-                                commit("SET_ACTIVE_INDEX", items.length)
-                                commit("ADD_ITEM")
-                            } else {
-                                commit("SET_ACTIVE_INDEX", state.addedItemsRecipe.length)
-                                commit("ADD_ITEM_RECIPE")
+                        for (let i = 0; i < state.responseData.length; i++) {
+                            for (let j = 0; j < commonRecent.length; j++) {
+                                if (state.responseData[i].id == commonRecent[j]) {
+                                    array2.push(state.responseData[i])
+                                    state.responseData.splice(i, 1)
+                                }
                             }
                         }
+                        console.log('array', array2)
+                        console.log('sorted array', array2.sort(function(a, b) {
+                            return parseFloat(a.time) - parseFloat(b.time);
+                        }))
+                        let array3 = [];
+                        array3 = array1.concat(array2)
+                        state.responseData = array3.concat(state.responseData)
+                        state.recentSearchResultsID = JSON.parse(JSON.stringify(commonRecent));
+                        /* console.log('recentIDs', state.recentSearchResultsID);
+                        console.log('response', state.responseData) */
+                        commit("SET_RESPONSE", true);
                     }
                 ).catch(function (error) {
                     console.log(error);
                 })
+        },
+        selectFood({ state, commit }, { searchRecipe, choiceIndex }) {
+            commit("SELECT_ITEM", state.responseData[choiceIndex])
+            commit("RECENT_SEARCH_RESULTS", state.responseData[choiceIndex].id)
+            let index = -1;
+            let items = !searchRecipe ? state.items[state.itemsPropNames[state.itemsIndex]] : state.addedItemsRecipe
+            if (items) {
+                for (let i = 0; i < items.length; i++) {
+                    if (items[i].NAME === state.selectedResponse.name) {
+                        index = i;
+                    }
+                }
+            }
+            if (index != -1) {
+                commit("SET_ACTIVE_INDEX", index)
+            } else {
+                commit("CREATE_ITEM_TO_ADD", false)
+                if (!searchRecipe) {
+                    commit("SET_ACTIVE_INDEX", items.length)
+                    commit("ADD_ITEM")
+                } else {
+                    commit("SET_ACTIVE_INDEX", state.addedItemsRecipe.length)
+                    commit("ADD_ITEM_RECIPE")
+                }
+            }
+            commit("SET_RESPONSE", false);
         },
         addItem({ state, getters, commit }) {
             commit("ADD_ITEM")
@@ -484,6 +584,12 @@ const searchAndAdd = {
         setRecipeDrag({ commit }, value) {
             commit("SET_RECIPE_DRAG", value)
         },
+        setResponseData({ commit }, value) {
+            commit("SET_RESPONSE_DATA", value)
+        },
+        setFavoriteSearchResults({ commit }, value) {
+            commit("FAVORITE_SEARCH_RESULTS", value)
+        }
     },
     getters: {
         totalForToday(state) {
