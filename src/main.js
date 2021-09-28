@@ -39,29 +39,40 @@ new Vue({
       measurementId: "G-486MLZ10L8"
     };
     firebase.initializeApp(config);
-    
+
     firebase.auth().onAuthStateChanged(user => {
-      console.log(firebase.auth() != null);
       if (user && user.uid) {
         var newUser = user.metadata.creationTime === user.metadata.lastSignInTime ? true : false;
-        this.$store.dispatch("firebase/setUser", user)
-        this.$store.dispatch("firebase/getData").then(() => {
-          this.$store.dispatch("firebase/setData", true)
-          if (newUser) {
-            this.$store.dispatch("firebase/setNewUser", newUser)
-            if (this.$router.currentRoute.path !== '/me') {
-              this.$router.push('/me')
+        //token for authorizing request
+        const tokenPromise = new Promise((resolve, reject) => {
+          firebase.auth().currentUser.getIdToken(true).then(function (token) {
+            resolve(token)
+          }).catch(function (error) {
+            console.log(error)
+          })
+        });
+        tokenPromise
+          .then(token => {
+            this.$store.dispatch("firebase/setUser", { user, token })
+            this.$store.dispatch("firebase/getData").then(() => {
+              this.$store.dispatch("firebase/setData", true)
+              if (newUser) {
+                this.$store.dispatch("firebase/setNewUser", newUser)
+                if (this.$router.currentRoute.path !== '/me') {
+                  this.$router.push('/me')
+                }
+              } else {
+                if (this.$router.currentRoute.path == '/' || this.$router.currentRoute.path == '') {
+                  this.$router.push('/calories')
+                }
+              }
             }
-          } else {
-            if (this.$router.currentRoute.path == '/' || this.$router.currentRoute.path == '') {
-              this.$router.push('/calories')
-            }
-          }
-
-        }
-        ).catch(function (error) {
-          console.log(error);
-        })
+            ).catch(function (error) {
+              console.log(error);
+            })
+          })
+          .catch(error => { console.log(error) });
+          //
       } else {
         this.$store.dispatch("firebase/setAuth", true)
         if (this.$router.currentRoute.path !== "/auth") {

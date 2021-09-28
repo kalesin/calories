@@ -2,7 +2,7 @@
   <v-card
     flat
     outlined
-    class="pa-0 rounded-lg d-flex flex-column grey lighten-3"
+    class="pa-0 rounded-lg d-flex flex-column"
   >
     <v-card-text class="text-center text-h4 pa-2 totalText"
       >{{ nutrientArray[0] }} kcal</v-card-text

@@ -86,7 +86,7 @@
           </div>
           <NutrientBox
             :nutrientArray="item.CALCULATED_NUTRIENTS"
-            class="ma-2 mt-0"
+            class="ma-2 mt-0 grey lighten-3"
           ></NutrientBox>
         </v-card>
       </div>

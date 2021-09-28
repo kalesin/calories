@@ -17,7 +17,7 @@
           startEdit(-2);
         "
       >
-        <v-icon>mdi-plus-circle</v-icon>ADD NEW
+        <v-icon class="mr-2">mdi-plus-circle</v-icon>ADD NEW
       </v-btn>
     </div>
     <div class="overflow-y-auto d-flex flex-column recipeBox">
@@ -92,7 +92,7 @@
           </div>
           <NutrientBox
             :nutrientArray="item.PORTION_NUTRIENTS"
-            class="ma-2 totalTextSize"
+            class="ma-2 totalTextSize grey lighten-3"
           ></NutrientBox>
         </v-card>
       </div>
@@ -157,9 +157,26 @@ export default {
       }, 0);
     },
     updateRecipes() {
-      this.$http.patch("data/" + `${this.userID}` + ".json", {
-        recipes: this.recipes,
+      const tokenPromise = new Promise((resolve, reject) => {
+        firebase
+          .auth()
+          .currentUser.getIdToken(true)
+          .then(function (token) {
+            resolve(token);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
       });
+      tokenPromise
+        .then((token) => {
+          this.$http.patch(`data/${this.userID}.json?auth=${token}`, {
+            recipes: this.recipes,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     dragStart(index) {
       this.$emit("drag-start-recipe", true);

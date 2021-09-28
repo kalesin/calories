@@ -10,8 +10,14 @@
       class="mb-2 d-flex flex-column"
     >
       <div
-        class="d-flex justify-space-between rounded-lg normalColor dropZone choice"
-        
+        class="
+          d-flex
+          justify-space-between
+          rounded-lg
+          normalColor
+          dropZone
+          choice
+        "
         @click="setItemsIndex(index)"
         @dragenter="dragEnterClass(index)"
         @dragleave="dragLeaveClass(index)"
@@ -20,7 +26,7 @@
         v-ripple
         :class="{
           activeColor: itemsIndex == index,
-          hoverColor:  hoverIndex === index,
+          hoverColor: hoverIndex === index,
         }"
       >
         <v-btn icon large class="mx-4 my-3 noEvents btn1">
@@ -36,7 +42,10 @@
           }}</v-icon>
         </v-btn>
       </div>
-      <MealCard @drag-start="setRecipeDrag(false)" v-if="itemsIndex == index"></MealCard>
+      <MealCard
+        @drag-start="setRecipeDrag(false)"
+        v-if="itemsIndex == index"
+      ></MealCard>
     </div>
   </v-card>
 </template>
@@ -44,6 +53,7 @@
 <script>
 import MealCard from "./MealCard";
 import { mapGetters, mapState, mapActions } from "vuex";
+import firebase from "firebase";
 
 export default {
   mounted() {
@@ -102,7 +112,7 @@ export default {
       "dailyEntries",
       "currentDate",
       "portionItem",
-      "recipeDrag"
+      "recipeDrag",
     ]),
     ...mapState("firebase", ["userID"]),
   },
@@ -117,10 +127,29 @@ export default {
       "addPortionOfRecipe",
       "addItemValue",
       "setRecipeDrag",
-      "addDailyEntry"
+      "addDailyEntry",
     ]),
     updateDailyEntries() {
-      this.$http.patch("data/" + `${this.userID}` + ".json", {dailyEntries: this.dailyEntries});
+      const tokenPromise = new Promise((resolve, reject) => {
+        firebase
+          .auth()
+          .currentUser.getIdToken(true)
+          .then(function (token) {
+            resolve(token);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      });
+      tokenPromise
+        .then((token) => {
+          this.$http.patch(`data/${this.userID}.json?auth=${token}`, {
+            dailyEntries: this.dailyEntries,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     onDrop({ dropIndex, dragIndex }) {
       if (!this.recipeDrag) {
@@ -168,7 +197,7 @@ export default {
   background-color: #0097a7;
 }
 .hoverColor {
-  background-color: orangered
+  background-color: orangered;
 }
 .noEvents {
   pointer-events: none;

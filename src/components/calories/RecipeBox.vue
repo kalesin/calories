@@ -218,9 +218,26 @@ export default {
       this.$refs.form.validate();
     },
     updateRecipes() {
-      this.$http.patch("data/" + `${this.userID}` + ".json", {
-        recipes: this.recipes,
+      const tokenPromise = new Promise((resolve, reject) => {
+        firebase
+          .auth()
+          .currentUser.getIdToken(true)
+          .then(function (token) {
+            resolve(token);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
       });
+      tokenPromise
+        .then((token) => {
+          this.$http.patch(`data/${this.userID}.json?auth=${token}`, {
+            recipes: this.recipes,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     submitNewRecipe() {
       if (this.valid) {

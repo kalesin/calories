@@ -43,10 +43,11 @@ const firebase = {
     actions: {
         async getData({ state, commit }) {
             let id = state.userID;
-            return Vue.http.get(`data/${id}.json`)
+            return Vue.http.get(`data/${id}.json?auth=${state.user.token}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data) {
+                        console.log(data)
                         let recipes = data.recipes ? data.recipes : [];
                         let maintenanceCalories = data.maintenanceCalories ? data.maintenanceCalories : 2000;
                         let dailyEntries = data.dailyEntries ? data.dailyEntries : [];
@@ -73,10 +74,11 @@ const firebase = {
         setEmail({ state, commit }, value) {
             commit("SET_EMAIL", value);
         },
-        setUser({ commit }, value) {
-            if (value.uid) {
-                commit("SET_USER", { displayName: value.displayName, uid: value.uid, photoURL: value.photoURL })
-                commit("searchAndAdd/SET_USER_ID", value, { root: true })
+        setUser({ commit }, {user, token}) {
+            if (user.uid) {
+                console.log(token, user)
+                commit("SET_USER", { displayName: user.displayName, uid: user.uid, photoURL: user.photoURL, token: token})
+                commit("searchAndAdd/SET_USER_ID", user, { root: true })
             } else {
                 commit("SET_USER", null)
             }

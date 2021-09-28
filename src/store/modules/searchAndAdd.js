@@ -299,33 +299,24 @@ const searchAndAdd = {
             state.favoriteSearchResults = value;
         },
         RECENT_SEARCH_RESULTS(state, value) {
-            state.resultsArray = []
-            //if its not a favorite item add to recent array
+            let recentOnlyIDsArray = [];
+            for (let i = 0; i < state.recentSearchResults.length; i++) {
+                recentOnlyIDsArray
+                    .push(state.recentSearchResults[i].id)
+            }
+            let index = recentOnlyIDsArray.indexOf(value);
             if (!state.favoriteSearchResults.includes(value)) {
-                for (let i = 0; i < state.recentSearchResults.length; i++) {
-                    state.resultsArray.push(state.recentSearchResults[i].id)
+                if (recentOnlyIDsArray.length == 0) {
+                    state.recentSearchResults.push({ id: value, lastAdded: dayjs() })
                 }
-                let index = state.resultsArray.indexOf(value);
-                if (state.resultsArray.length == 0) {
-                    state.recentSearchResults.push({ id: value, time: dayjs() })
-                }
-                else if (state.resultsArray.length < 100) {
+                else {
                     if (index != -1) {
-                        console.log('change time')
-                        console.log('index', index)
-                        console.log('time before', dayjs(state.recentSearchResults[index].time))
-                        state.recentSearchResults[index].time = dayjs();
-                        console.log('time after', dayjs(state.recentSearchResults[index].time))
+                        state.recentSearchResults[index].lastAdded = dayjs();
                     } else {
-                        state.recentSearchResults.push({ id: value, time: dayjs() })
-                    }
-                } else if (state.resultsArray.length == 100) {
-                    if (index != -1) {
-                        console.log('change time')
-                        state.recentSearchResults[index].time = dayjs();
-                    } else {
-                        state.recentSearchResults.splice(0, 1)
-                        state.recentSearchResults.push({ id: value, time: dayjs() })
+                        if (recentOnlyIDsArray.length >= 100) {
+                            state.recentSearchResults.splice(0, 1)
+                        }
+                        state.recentSearchResults.push({ id: value, lastAdded: dayjs() })
                     }
                 }
             }
@@ -356,55 +347,52 @@ const searchAndAdd = {
                                 parseFloat(response.data[i].fat),
                                 parseFloat(response.data[i].fiber),
                             ]
-                            /* state.responseData[i].favorite = false;
-                            state.responseData[i].lastAdded = null; */
+                            state.responseData[i].favorite = false;
+                            state.responseData[i].lastAdded = null;
                             i++;
                         }
                         //sortiranje po favoritih
-                        let array = [];
-                        let array1 = [];
-                        let array2 = [];
-                        let arrayRecent = [];
+                        //narediš array IDjev za primerjat
+                        let responseDataOnlyIDsArray = [];
                         for (let i = 0; i < state.responseData.length; i++) {
-                            array.push(state.responseData[i].id)
-                        } for (let i = 0; i < state.recentSearchResults.length; i++) {
-                            arrayRecent.push(state.recentSearchResults[i].id)
+                            responseDataOnlyIDsArray.push(state.responseData[i].id)
                         }
-                        let commonFavorite = _.intersection(array, state.favoriteSearchResults)
-                        let commonRecent = _.intersection(array, arrayRecent)
-                        let commonBoth = _.intersection(commonFavorite, commonRecent)
-                        for (let i = 0; i < commonBoth.length; i++) {
-                            let index = commonRecent.indexOf(commonBoth[i])
-                            if (index != -1) {
-                                commonRecent.splice(index, 1)
-                            }
+                        let recentOnlyIDsArray = [];
+                        for (let i = 0; i < state.recentSearchResults.length; i++) {
+                            recentOnlyIDsArray
+                                .push(state.recentSearchResults[i].id)
                         }
+                        //primerjaš
+                        let commonFavoriteIDs = _.intersection(responseDataOnlyIDsArray, state.favoriteSearchResults)
+                        let commonRecentIDs = _.intersection(responseDataOnlyIDsArray, recentOnlyIDsArray
+                        )
                         for (let i = 0; i < state.responseData.length; i++) {
-                            for (let j = 0; j < commonFavorite.length; j++) {
-                                if (state.responseData[i].id == commonFavorite[j]) {
-                                    array1.push(state.responseData[i])
-                                    state.responseData.splice(i, 1)
+                            for (let j = 0; j < commonFavoriteIDs.length; j++) {
+                                if (state.responseData[i].id == commonFavoriteIDs[j]) {
+                                    //označiš favorite
+                                    state.responseData[i].favorite = true;
                                 }
                             }
                         }
                         for (let i = 0; i < state.responseData.length; i++) {
-                            for (let j = 0; j < commonRecent.length; j++) {
-                                if (state.responseData[i].id == commonRecent[j]) {
-                                    array2.push(state.responseData[i])
-                                    state.responseData.splice(i, 1)
+                            for (let j = 0; j < commonRecentIDs.length; j++) {
+                                if (state.responseData[i].id == commonRecentIDs[j]) {
+                                    //kopiraš time v responseData array
+                                    state.responseData[i].lastAdded = dayjs(state.recentSearchResults[recentOnlyIDsArray.indexOf(commonRecentIDs[j])].lastAdded).valueOf();
                                 }
                             }
                         }
-                        console.log('array', array2)
-                        console.log('sorted array', array2.sort(function(a, b) {
-                            return parseFloat(a.time) - parseFloat(b.time);
-                        }))
-                        let array3 = [];
-                        array3 = array1.concat(array2)
-                        state.responseData = array3.concat(state.responseData)
-                        state.recentSearchResultsID = JSON.parse(JSON.stringify(commonRecent));
-                        /* console.log('recentIDs', state.recentSearchResultsID);
-                        console.log('response', state.responseData) */
+                        //sortiraš
+                        let favorite = state.responseData.filter(el => el.favorite).sort()
+                        let recent = state.responseData.filter(el => el.lastAdded && !el.favorite).sort((a, b) =>
+                            parseFloat(a.lastAdded) - parseFloat(b.lastAdded)).reverse();
+                        //convert back from unix timestamp
+                        for (let i = 0; i < recent.length; i++) {
+                            recent[i].lastAdded = dayjs(recent[i].lastAdded);
+                        }
+                        let rest = state.responseData.filter(el => !el.favorite && !el.lastAdded)
+                        state.responseData = favorite.concat(recent, rest)
+
                         commit("SET_RESPONSE", true);
                     }
                 ).catch(function (error) {
