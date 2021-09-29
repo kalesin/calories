@@ -47,7 +47,6 @@ const firebase = {
                 .then(response => response.json())
                 .then(data => {
                     if (data) {
-                        console.log(data)
                         let recipes = data.recipes ? data.recipes : [];
                         let maintenanceCalories = data.maintenanceCalories ? data.maintenanceCalories : 2000;
                         let dailyEntries = data.dailyEntries ? data.dailyEntries : [];
@@ -76,7 +75,6 @@ const firebase = {
         },
         setUser({ commit }, {user, token}) {
             if (user.uid) {
-                console.log(token, user)
                 commit("SET_USER", { displayName: user.displayName, uid: user.uid, photoURL: user.photoURL, token: token})
                 commit("searchAndAdd/SET_USER_ID", user, { root: true })
             } else {

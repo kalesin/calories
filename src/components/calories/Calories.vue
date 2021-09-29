@@ -1,7 +1,7 @@
 <template>
   <v-container fluid class="ma-0 d-flex container">
     <div class="d-flex flex-column middle">
-      <Search class="mx-auto search"></Search>
+      <Search class="mx-auto search" :recipesOpen="false"></Search>
       <DailyBox class="dailyBox mb-3" :nutrientArray="totalForToday"></DailyBox>
       <AddedFoods class="addedFoods overflow-y-auto"></AddedFoods>
     </div>
@@ -13,7 +13,10 @@
 
     <Recipes
       v-if="editIndex != -1"
-      @close="editIndex = -1"
+      @close="
+        editIndex = -1;
+        setResponseData([]);
+      "
       :index="editIndex"
     ></Recipes>
   </v-container>
@@ -27,7 +30,6 @@ import AddedFoods from "./AddedFoods";
 import RecipesDisplay from "./RecipesDisplay";
 import DailyBox from "./DailyBox";
 import Search from "./Search";
-import dayjs from "dayjs";
 
 import Recipes from "./Recipes";
 import { mapActions, mapGetters, mapState } from "vuex";
@@ -92,6 +94,8 @@ export default {
       "dailyEntryTemp",
       "recipes",
       "currentDate",
+      "editIndex",
+      "query",
     ]),
     editIndex: {
       get() {
@@ -125,6 +129,8 @@ export default {
       "setItems",
       "setRecipeDrag",
       "addDailyEntry",
+      "setResponseData",
+      "searchFood",
     ]),
   },
 };

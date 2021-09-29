@@ -392,7 +392,7 @@ const searchAndAdd = {
                         }
                         let rest = state.responseData.filter(el => !el.favorite && !el.lastAdded)
                         state.responseData = favorite.concat(recent, rest)
-
+                        console.log(state.responseData)
                         commit("SET_RESPONSE", true);
                     }
                 ).catch(function (error) {

@@ -27,8 +27,7 @@
               :class="{ navbarActive: navbarActive }"
             >
               <v-card-text
-                style
-                class="text-h5 pa-0 justify-end align-end flex-grow-1 textWidth"
+                class="text-h5 pa-0 justify-end align-end flex-grow-1 textWidth truncate"
                 >{{ item.NAME }}</v-card-text
               >
             </div>
@@ -186,6 +185,9 @@ export default {
         }
       }
     },
+    isTruncated(el) {
+      return el.scrollWidth > el.clientWidth;
+    },
   },
 };
 </script>
@@ -205,6 +207,11 @@ export default {
 .textWidth {
   text-transform: capitalize;
   text-align: center;
+}
+.truncate{
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;  
 }
 .editBox {
   width: 125px;

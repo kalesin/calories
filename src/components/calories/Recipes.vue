@@ -12,7 +12,7 @@
           <v-icon>mdi-close-circle</v-icon>
         </v-btn>
       </RecipeBox>
-      <Search class="mx-auto mt-5" style="height: 64px; width: 80%"></Search>
+      <Search class="mx-auto mt-5" style="height: 64px; width: 80%" :recipesOpen="true"></Search>
       <RecipesEdit class="recipesEdit overflow-y-auto"></RecipesEdit>
     </v-card>
 
@@ -20,7 +20,7 @@
       absolute
       centered
       rounded="pill"
-      shaped
+      shaped 
       v-model="snackbar"
       :timeout="3000"
     >
@@ -80,9 +80,12 @@ export default {
       "addedItemsRecipe",
       "recipesPortions",
       "recipes",
-      "userID"
+      "userID",
+      "editIndex",
+      "queryRecipe",
     ]),
     ...mapGetters("searchAndAdd", ["totalForRecipe"]),
+    
     total: {
       get() {
         let total = [0, 0, 0, 0, 0];
@@ -109,6 +112,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions("searchAndAdd", ["searchFood"]),
     handler(e) {
       if (window.innerWidth <= 500) {
         this.fullscreen = true;

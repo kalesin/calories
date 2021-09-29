@@ -2,13 +2,14 @@ import Vue from 'vue'
 import VueRouter from 'vue-router';
 import VueResource from 'vue-resource';
 import Vuetify from 'vuetify';
+import vuetify from './plugins/vuetify';
 
 import App from './App.vue'
 import { routes } from './routes';
 import store from './store/store';
 
-import firebase from 'firebase'
-import vuetify from './plugins/vuetify';
+import firebase from 'firebase';
+
 
 Vue.use(VueRouter);
 Vue.use(VueResource);
@@ -39,7 +40,6 @@ new Vue({
       measurementId: "G-486MLZ10L8"
     };
     firebase.initializeApp(config);
-
     firebase.auth().onAuthStateChanged(user => {
       if (user && user.uid) {
         var newUser = user.metadata.creationTime === user.metadata.lastSignInTime ? true : false;
@@ -72,7 +72,7 @@ new Vue({
             })
           })
           .catch(error => { console.log(error) });
-          //
+        //
       } else {
         this.$store.dispatch("firebase/setAuth", true)
         if (this.$router.currentRoute.path !== "/auth") {
