@@ -11,8 +11,8 @@
         v-if="!entry"
           color="success"
           @click.stop=" 
-      removeRecipe({index: deleteIndex})
-      show=false
+      removeRecipe({index: deleteIndex});
+      show=false;
       "
         >Yes, Delete</v-btn>
         <v-btn

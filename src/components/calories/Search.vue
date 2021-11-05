@@ -50,10 +50,7 @@
       >
         <div
           @mouseenter="setPanel(i)"
-          @mouseleave="
-            setPanel(null);
-            resetTimer;
-          "
+          @mouseleave="setPanel(null)"
           class="d-flex flex-row"
         >
           <v-btn
@@ -70,7 +67,7 @@
             <v-icon v-else class="ma-2" color="black">mdi-star-outline</v-icon>
           </v-btn>
           <div
-          style="width: 100%"
+            style="width: 100%"
             class="d-flex"
             @click="
               checkItemsIndex();
@@ -87,11 +84,7 @@
               >{{ item.name }}</v-expansion-panel-header
             >
             <v-card-text
-              class="
-                text-subtitle-1 text-left
-                px-2
-                text-justify-center
-              "
+              class="text-subtitle-1 text-left px-2 text-justify-center"
               style="width: 236px; height: 64px"
               v-if="item.lastAdded && !item.favorite"
             >
@@ -156,7 +149,6 @@ export default {
   data() {
     return {
       panel: null,
-      timer: null,
       page: 1,
     };
   },
@@ -229,11 +221,7 @@ export default {
       return this.favoriteSearchResults.findIndex((el) => el == value);
     },
     setPanel(index) {
-      this.panel = index; /* 
-      this.timer = setTimeout(() => (this.panel = parseInt(index)), 100); */
-    },
-    resetTimer() {
-      clearTimeout(this.timer);
+      this.panel = index;
     },
     setPage(value) {
       this.page = value;
@@ -262,16 +250,18 @@ export default {
 .expand-enter,
 .expand-leave-to {
   opacity: 0;
-  transform: rotateY(45deg);
+  transform: translateX(50px);
 }
 .expand-enter-to,
 .expand-leave {
   opacity: 1;
-  transform: rotateY(0deg);
+  transform: translateX(0px);
 }
+
 .expand-enter-active,
 .expand-leave-active {
   transition: opacity, transform 150ms ease-out;
+  transition-delay: 200ms;
 }
 .disabled {
   pointer-events: none;
@@ -283,7 +273,7 @@ export default {
   padding: 52px !important;
   padding-top: 0 !important;
 }
-.v-application--is-ltr .v-expansion-panel-header__icon{
+.v-application--is-ltr .v-expansion-panel-header__icon {
   margin-left: 4px !important;
 }
 </style>

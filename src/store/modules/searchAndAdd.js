@@ -369,7 +369,7 @@ const searchAndAdd = {
                         for (let i = 0; i < state.responseData.length; i++) {
                             for (let j = 0; j < commonFavoriteIDs.length; j++) {
                                 if (state.responseData[i].id == commonFavoriteIDs[j]) {
-                                    //označiš favorite
+                                    //označiš favorit
                                     state.responseData[i].favorite = true;
                                 }
                             }
