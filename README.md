@@ -1,3 +1,6 @@
+# ⚠️WARNING NOTICE⚠️
+### This repository was created for learning/demo purposes only.
+### It does not highlight my current skills and is not actively maintained.
 
 # Calories Counter App
 
